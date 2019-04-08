@@ -1,0 +1,388 @@
+CREATE SCHEMA `DWM` ;
+CREATE TABLE `DWM`.`sales` (
+  `year` INT NOT NULL,
+  `country` VARCHAR(45) NOT NULL,
+  `product` VARCHAR(45) NOT NULL,
+  `profit` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`year`, `country`, `product`));
+
+
+
+
+
+ilaf@ilaf-Inspiron-15-3567 ~ $ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 5.7.25-0ubuntu0.16.04.2 (Ubuntu)
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database sales;
+ERROR 1007 (HY000): Can't create database 'sales'; database exists
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| AIKTC              |
+| Maid_Service       |
+| Online_food        |
+| Reg_Emp            |
+| bank_db            |
+| e-scholarship      |
+| employees          |
+| example            |
+| fashionhub         |
+| invoice            |
+| learning           |
+| mysql              |
+| performance_schema |
+| photography        |
+| phpmyadmin         |
+| railway            |
+| sales              |
+| sys                |
+| wordpressdb        |
+| wp_myblog          |
++--------------------+
+21 rows in set (0.01 sec)
+
+mysql> use sales;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_sales |
++-----------------+
+| new_table       |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_sales |
++-----------------+
+| sales           |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> desc sales;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| year    | int(11)     | NO   | PRI | NULL    |       |
+| country | varchar(45) | NO   | PRI | NULL    |       |
+| product | varchar(45) | NO   | PRI | NULL    |       |
+| profit  | int(11)     | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from sales;
++------+---------+-----------+--------+
+| year | country | product   | profit |
++------+---------+-----------+--------+
+| 2010 | China   | Apples    | 456000 |
+| 2010 | China   | Rice      | 467500 |
+| 2012 | China   | Berries   | 546000 |
+| 2013 | China   | Mobiles   | 840000 |
+| 2015 | China   | Sugar     | 495000 |
+| 2017 | China   | sugar     | 467000 |
+| 2011 | India   | Rice      | 760000 |
+| 2012 | India   | Wheat     | 450000 |
+| 2013 | India   | Mangoes   | 452000 |
+| 2014 | India   | Mango     | 645000 |
+| 2015 | India   | Apples    | 650450 |
+| 2016 | India   | Apples    | 715000 |
+| 2010 | Japan   | Fish      | 732000 |
+| 2012 | Japan   | Berries   | 456200 |
+| 2014 | Japan   | Fish      | 462000 |
+| 2015 | Japan   | Juices    | 752200 |
+| 2015 | Japan   | Rice      | 560000 |
+| 2016 | Japan   | Rice      | 456000 |
+| 2012 | USA     | Choclates | 312000 |
+| 2013 | USA     | Choclates | 420000 |
+| 2014 | USA     | Coats     | 451200 |
+| 2015 | USA     | Cheese    | 450000 |
+| 2016 | USA     | Oil       | 780000 |
+| 2017 | USA     | Coats     | 125000 |
++------+---------+-----------+--------+
+24 rows in set (0.00 sec)
+
+mysql> select year, sum(profit) from sales;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'sales.sales.year'; this is incompatible with sql_mode=only_full_group_by
+mysql> select year,sum(profit) from sales;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'sales.sales.year'; this is incompatible with sql_mode=only_full_group_by
+mysql> select year,sum(profit) from sales group by year;
++------+-------------+
+| year | sum(profit) |
++------+-------------+
+| 2010 |     1655500 |
+| 2011 |      760000 |
+| 2012 |     1764200 |
+| 2013 |     1712000 |
+| 2014 |     1558200 |
+| 2015 |     2907650 |
+| 2016 |     1951000 |
+| 2017 |      592000 |
++------+-------------+
+8 rows in set (0.07 sec)
+
+mysql> select year,country,sum(profit) from sales group by year,country;
++------+---------+-------------+
+| year | country | sum(profit) |
++------+---------+-------------+
+| 2010 | China   |      923500 |
+| 2010 | Japan   |      732000 |
+| 2011 | India   |      760000 |
+| 2012 | China   |      546000 |
+| 2012 | India   |      450000 |
+| 2012 | Japan   |      456200 |
+| 2012 | USA     |      312000 |
+| 2013 | China   |      840000 |
+| 2013 | India   |      452000 |
+| 2013 | USA     |      420000 |
+| 2014 | India   |      645000 |
+| 2014 | Japan   |      462000 |
+| 2014 | USA     |      451200 |
+| 2015 | China   |      495000 |
+| 2015 | India   |      650450 |
+| 2015 | Japan   |     1312200 |
+| 2015 | USA     |      450000 |
+| 2016 | India   |      715000 |
+| 2016 | Japan   |      456000 |
+| 2016 | USA     |      780000 |
+| 2017 | China   |      467000 |
+| 2017 | USA     |      125000 |
++------+---------+-------------+
+22 rows in set (0.00 sec)
+
+mysql> select year,sum(profit) from sales group by year with rollup;
++------+-------------+
+| year | sum(profit) |
++------+-------------+
+| 2010 |     1655500 |
+| 2011 |      760000 |
+| 2012 |     1764200 |
+| 2013 |     1712000 |
+| 2014 |     1558200 |
+| 2015 |     2907650 |
+| 2016 |     1951000 |
+| 2017 |      592000 |
+| NULL |    12900550 |
++------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select year,country,sum(profit) from sales group by year,country with rollup;
++------+---------+-------------+
+| year | country | sum(profit) |
++------+---------+-------------+
+| 2010 | China   |      923500 |
+| 2010 | Japan   |      732000 |
+| 2010 | NULL    |     1655500 |
+| 2011 | India   |      760000 |
+| 2011 | NULL    |      760000 |
+| 2012 | China   |      546000 |
+| 2012 | India   |      450000 |
+| 2012 | Japan   |      456200 |
+| 2012 | USA     |      312000 |
+| 2012 | NULL    |     1764200 |
+| 2013 | China   |      840000 |
+| 2013 | India   |      452000 |
+| 2013 | USA     |      420000 |
+| 2013 | NULL    |     1712000 |
+| 2014 | India   |      645000 |
+| 2014 | Japan   |      462000 |
+| 2014 | USA     |      451200 |
+| 2014 | NULL    |     1558200 |
+| 2015 | China   |      495000 |
+| 2015 | India   |      650450 |
+| 2015 | Japan   |     1312200 |
+| 2015 | USA     |      450000 |
+| 2015 | NULL    |     2907650 |
+| 2016 | India   |      715000 |
+| 2016 | Japan   |      456000 |
+| 2016 | USA     |      780000 |
+| 2016 | NULL    |     1951000 |
+| 2017 | China   |      467000 |
+| 2017 | USA     |      125000 |
+| 2017 | NULL    |      592000 |
+| NULL | NULL    |    12900550 |
++------+---------+-------------+
+31 rows in set (0.00 sec)
+
+mysql> select country,year,sum(profit) from sales group by country,year with rollup;
++---------+------+-------------+
+| country | year | sum(profit) |
++---------+------+-------------+
+| China   | 2010 |      923500 |
+| China   | 2012 |      546000 |
+| China   | 2013 |      840000 |
+| China   | 2015 |      495000 |
+| China   | 2017 |      467000 |
+| China   | NULL |     3271500 |
+| India   | 2011 |      760000 |
+| India   | 2012 |      450000 |
+| India   | 2013 |      452000 |
+| India   | 2014 |      645000 |
+| India   | 2015 |      650450 |
+| India   | 2016 |      715000 |
+| India   | NULL |     3672450 |
+| Japan   | 2010 |      732000 |
+| Japan   | 2012 |      456200 |
+| Japan   | 2014 |      462000 |
+| Japan   | 2015 |     1312200 |
+| Japan   | 2016 |      456000 |
+| Japan   | NULL |     3418400 |
+| USA     | 2012 |      312000 |
+| USA     | 2013 |      420000 |
+| USA     | 2014 |      451200 |
+| USA     | 2015 |      450000 |
+| USA     | 2016 |      780000 |
+| USA     | 2017 |      125000 |
+| USA     | NULL |     2538200 |
+| NULL    | NULL |    12900550 |
++---------+------+-------------+
+27 rows in set (0.00 sec)
+
+mysql> select year,country,product,sum(profit) from sales group by year,country,product;
++------+---------+-----------+-------------+
+| year | country | product   | sum(profit) |
++------+---------+-----------+-------------+
+| 2010 | China   | Apples    |      456000 |
+| 2010 | China   | Rice      |      467500 |
+| 2010 | Japan   | Fish      |      732000 |
+| 2011 | India   | Rice      |      760000 |
+| 2012 | China   | Berries   |      546000 |
+| 2012 | India   | Wheat     |      450000 |
+| 2012 | Japan   | Berries   |      456200 |
+| 2012 | USA     | Choclates |      312000 |
+| 2013 | China   | Mobiles   |      840000 |
+| 2013 | India   | Mangoes   |      452000 |
+| 2013 | USA     | Choclates |      420000 |
+| 2014 | India   | Mango     |      645000 |
+| 2014 | Japan   | Fish      |      462000 |
+| 2014 | USA     | Coats     |      451200 |
+| 2015 | China   | Sugar     |      495000 |
+| 2015 | India   | Apples    |      650450 |
+| 2015 | Japan   | Juices    |      752200 |
+| 2015 | Japan   | Rice      |      560000 |
+| 2015 | USA     | Cheese    |      450000 |
+| 2016 | India   | Apples    |      715000 |
+| 2016 | Japan   | Rice      |      456000 |
+| 2016 | USA     | Oil       |      780000 |
+| 2017 | China   | sugar     |      467000 |
+| 2017 | USA     | Coats     |      125000 |
++------+---------+-----------+-------------+
+24 rows in set (0.00 sec)
+
+mysql> select year,country,product,sum(profit) from sales group by year,country,product with rollup;
++------+---------+-----------+-------------+
+| year | country | product   | sum(profit) |
++------+---------+-----------+-------------+
+| 2010 | China   | Apples    |      456000 |
+| 2010 | China   | Rice      |      467500 |
+| 2010 | China   | NULL      |      923500 |
+| 2010 | Japan   | Fish      |      732000 |
+| 2010 | Japan   | NULL      |      732000 |
+| 2010 | NULL    | NULL      |     1655500 |
+| 2011 | India   | Rice      |      760000 |
+| 2011 | India   | NULL      |      760000 |
+| 2011 | NULL    | NULL      |      760000 |
+| 2012 | China   | Berries   |      546000 |
+| 2012 | China   | NULL      |      546000 |
+| 2012 | India   | Wheat     |      450000 |
+| 2012 | India   | NULL      |      450000 |
+| 2012 | Japan   | Berries   |      456200 |
+| 2012 | Japan   | NULL      |      456200 |
+| 2012 | USA     | Choclates |      312000 |
+| 2012 | USA     | NULL      |      312000 |
+| 2012 | NULL    | NULL      |     1764200 |
+| 2013 | China   | Mobiles   |      840000 |
+| 2013 | China   | NULL      |      840000 |
+| 2013 | India   | Mangoes   |      452000 |
+| 2013 | India   | NULL      |      452000 |
+| 2013 | USA     | Choclates |      420000 |
+| 2013 | USA     | NULL      |      420000 |
+| 2013 | NULL    | NULL      |     1712000 |
+| 2014 | India   | Mango     |      645000 |
+| 2014 | India   | NULL      |      645000 |
+| 2014 | Japan   | Fish      |      462000 |
+| 2014 | Japan   | NULL      |      462000 |
+| 2014 | USA     | Coats     |      451200 |
+| 2014 | USA     | NULL      |      451200 |
+| 2014 | NULL    | NULL      |     1558200 |
+| 2015 | China   | Sugar     |      495000 |
+| 2015 | China   | NULL      |      495000 |
+| 2015 | India   | Apples    |      650450 |
+| 2015 | India   | NULL      |      650450 |
+| 2015 | Japan   | Juices    |      752200 |
+| 2015 | Japan   | Rice      |      560000 |
+| 2015 | Japan   | NULL      |     1312200 |
+| 2015 | USA     | Cheese    |      450000 |
+| 2015 | USA     | NULL      |      450000 |
+| 2015 | NULL    | NULL      |     2907650 |
+| 2016 | India   | Apples    |      715000 |
+| 2016 | India   | NULL      |      715000 |
+| 2016 | Japan   | Rice      |      456000 |
+| 2016 | Japan   | NULL      |      456000 |
+| 2016 | USA     | Oil       |      780000 |
+| 2016 | USA     | NULL      |      780000 |
+| 2016 | NULL    | NULL      |     1951000 |
+| 2017 | China   | sugar     |      467000 |
+| 2017 | China   | NULL      |      467000 |
+| 2017 | USA     | Coats     |      125000 |
+| 2017 | USA     | NULL      |      125000 |
+| 2017 | NULL    | NULL      |      592000 |
+| NULL | NULL    | NULL      |    12900550 |
++------+---------+-----------+-------------+
+55 rows in set (0.00 sec)
+
+mysql> 
+mysql> select year,country,product,sum(profit) from sales where (country = "India" OR country = "China") and (year = 2011 OR year = 2016) group by year,country,product; 
++------+---------+---------+-------------+
+| year | country | product | sum(profit) |
++------+---------+---------+-------------+
+| 2011 | India   | Rice    |      760000 |
+| 2016 | India   | Apples  |      715000 |
++------+---------+---------+-------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from sales where year=2017;
+select * from sales where year=2017;
+^C
+mysql> select * from sales where year = 2017;
++------+---------+---------+--------+
+| year | country | product | profit |
++------+---------+---------+--------+
+| 2017 | China   | sugar   | 467000 |
+| 2017 | USA     | Coats   | 125000 |
++------+---------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select product,profit from sales where country="India" and year="2011";
++---------+--------+
+| product | profit |
++---------+--------+
+| Rice    | 760000 |
++---------+--------+
+1 row in set (0.05 sec)
+
+
+select country,sum(If (product = "Apples",profit,NULL)) as 'Apples',sum(If (product = "Rice",profit,NULL)) as 'Rice',sum(If (product = "Berries",profit,NULL)) as 'Berries',sum(If (product = "Mangoes",profit,NULL)) as 'Mangoes',sum(If (product = "Mobiles",profit,NULL)) as 'Mobiles',sum(If (product = "Sugar",profit,NULL)) as 'Sugar',sum(If (product = "Wheat",profit,NULL)) as 'Wheat',sum(If (product = "Mango",profit,NULL)) as 'Mango',sum(If (product = "Fish",profit,NULL)) as 'Fish',sum(If (product = "Juices",profit,NULL)) as 'Juices', sum(If (product = "Choclates",profit,NULL)) as 'Choclates',sum(If (product = "Coats",profit,NULL)) as 'Coats',sum(If (product = "Cheese",profit,NULL)) as 'Cheese',sum(If (product = "Oil",profit,NULL)) as 'Oil' from sales group by country;
++---------+---------+---------+---------+---------+---------+--------+--------+--------+---------+--------+-----------+--------+--------+--------+
+| country | Apples  | Rice    | Berries | Mangoes | Mobiles | Sugar  | Wheat  | Mango  | Fish    | Juices | Choclates | Coats  | Cheese | Oil    |
++---------+---------+---------+---------+---------+---------+--------+--------+--------+---------+--------+-----------+--------+--------+--------+
+| China   |  456000 |  467500 |  546000 |    NULL |  840000 | 962000 |   NULL |   NULL |    NULL |   NULL |      NULL |   NULL |   NULL |   NULL |
+| India   | 1365450 |  760000 |    NULL |  452000 |    NULL |   NULL | 450000 | 645000 |    NULL |   NULL |      NULL |   NULL |   NULL |   NULL |
+| Japan   |    NULL | 1016000 |  456200 |    NULL |    NULL |   NULL |   NULL |   NULL | 1194000 | 752200 |      NULL |   NULL |   NULL |   NULL |
+| USA     |    NULL |    NULL |    NULL |    NULL |    NULL |   NULL |   NULL |   NULL |    NULL |   NULL |    732000 | 576200 | 450000 | 780000 |
++---------+---------+---------+---------+---------+---------+--------+--------+--------+---------+--------+-----------+--------+--------+--------+
+4 rows in set (0.04 sec)
+
+
